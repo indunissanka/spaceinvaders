@@ -483,6 +483,17 @@ const canvas = document.getElementById('gameCanvas');
         mouseX = e.clientX;
     });
 
+    canvas.addEventListener('click', () => {
+        if (gameRunning && canShoot && Date.now() - lastFireTime > shootDelay) {
+            fire();
+            canShoot = false;
+            lastFireTime = Date.now();
+            setTimeout(() => {
+                canShoot = true;
+            }, shootDelay);
+        }
+    });
+
     const keys = {};
     document.addEventListener('keydown', (e) => {
       keys[e.code] = true;
