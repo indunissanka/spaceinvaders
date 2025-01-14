@@ -1,0 +1,71 @@
+body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #000;
+      overflow: hidden;
+    }
+
+    .game-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    canvas {
+      background-color: #000;
+      border: 2px solid #fff;
+      image-rendering: pixelated;
+      width: 100%;
+      height: 100%;
+    }
+
+    .score, .lives, .level {
+      position: absolute;
+      color: #fff;
+      font-size: 1em;
+      font-family: monospace;
+    }
+
+    .score {
+      top: 10px;
+      left: 10px;
+    }
+
+    .lives {
+      top: 10px;
+      right: 10px;
+    }
+
+    .level {
+      top: 10px;
+      left: 250px;
+    }
+
+    .game-over-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 4em;
+        color: red;
+        text-align: center;
+        display: none;
+        text-shadow: 2px 2px 4px #000;
+        font-family: monospace;
+    }
+
+    .champion-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 3em;
+        color: gold;
+        text-align: center;
+        display: none;
+        text-shadow: 2px 2px 4px #000;
+        font-family: monospace;
+    }
