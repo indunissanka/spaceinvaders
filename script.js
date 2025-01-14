@@ -6,6 +6,9 @@ const canvas = document.getElementById('gameCanvas');
     const gameOverText = document.getElementById('gameOver');
     const championText = document.getElementById('champion');
     const explosionSound = document.getElementById('explosionSound');
+    const startButton = document.getElementById('startButton');
+    const stopButton = document.getElementById('stopButton');
+    const resetButton = document.getElementById('resetButton');
 
     let playerWidth = 48;
     let playerHeight = 48;
@@ -21,6 +24,8 @@ const canvas = document.getElementById('gameCanvas');
     const shootDelay = 200;
     let fireDelay = 100;
     let lastFireTime = 0;
+    let waveFire = [];
+    let mouseX = null;
 
     let invaderWidth = 32;
     let invaderHeight = 32;
@@ -38,7 +43,7 @@ const canvas = document.getElementById('gameCanvas');
     let score = 0;
     let lives = 3;
     let level = 1;
-    let gameRunning = true;
+    let gameRunning = false;
     let gameOverDisplayed = false;
     const totalLevels = 12;
     const explosions = [];
@@ -71,7 +76,7 @@ const canvas = document.getElementById('gameCanvas');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         playerX = canvas.width / 2 - playerWidth / 2;
-        playerY = canvas.height - playerHeight - 10;
+        playerY = canvas.height - playerHeight - 100;
     }
 
     function createInvaders() {
@@ -174,13 +179,29 @@ const canvas = document.getElementById('gameCanvas');
         });
     }
 
+    function drawWaveFire() {
+        waveFire.forEach(fire => {
+            ctx.fillStyle = 'rgba(245, 245, 220, ' + fire.alpha + ')';
+            ctx.beginPath();
+            ctx.moveTo(fire.x, fire.y);
+            ctx.quadraticCurveTo(fire.x + fire.width / 2, fire.y - fire.height * 2, fire.x + fire.width, fire.y);
+            ctx.lineTo(fire.x + fire.width, fire.y + fire.height);
+            ctx.quadraticCurveTo(fire.x + fire.width / 2, fire.y - fire.height * 1, fire.x, fire.y + fire.height);
+            ctx.closePath();
+            ctx.fill();
+        });
+    }
+
     function updatePlayer() {
-      if (keys['ArrowLeft'] && playerX > 0) {
-        playerX -= playerSpeed;
-      }
-      if (keys['ArrowRight'] && playerX < canvas.width - playerWidth) {
-        playerX += playerSpeed;
-      }
+        if (mouseX !== null) {
+            playerX = mouseX - playerWidth / 2;
+        }
+        if (keys['ArrowLeft'] && playerX > 0) {
+            playerX -= playerSpeed;
+        }
+        if (keys['ArrowRight'] && playerX < canvas.width - playerWidth) {
+            playerX += playerSpeed;
+        }
     }
 
     function updateBullets() {
@@ -245,6 +266,16 @@ const canvas = document.getElementById('gameCanvas');
             explosions[i].frame++;
             if (explosions[i].frame >= explosions[i].frames.length) {
                 explosions.splice(i, 1);
+            }
+        }
+    }
+
+    function updateWaveFire() {
+        for (let i = waveFire.length - 1; i >= 0; i--) {
+            waveFire[i].y -= 10;
+            waveFire[i].alpha -= 0.1;
+            if (waveFire[i].y < playerY - canvas.height / 2 || waveFire[i].alpha <= 0) {
+                waveFire.splice(i, 1);
             }
         }
     }
@@ -389,6 +420,8 @@ const canvas = document.getElementById('gameCanvas');
                 bullets.push({ x: bulletX + playerWidth / 3, y: bulletY });
             }, 2 * fireDelay);
         }
+        
+        waveFire.push({x: playerX, y: playerY + playerHeight / 2, width: playerWidth, height: 10, alpha: 1});
     }
 
     function gameLoop() {
@@ -404,12 +437,14 @@ const canvas = document.getElementById('gameCanvas');
       checkCollisions();
       checkWin();
       updateExplosions();
+      updateWaveFire();
 
       drawPlayer();
       drawBullets();
       drawInvaders();
       drawEnemyBullets();
       drawExplosions();
+      drawWaveFire();
 
       requestAnimationFrame(gameLoop);
     }
@@ -429,6 +464,24 @@ const canvas = document.getElementById('gameCanvas');
         createInvaders();
         gameLoop();
     }
+
+    startButton.addEventListener('click', () => {
+        if (!gameRunning) {
+            startGame();
+        }
+    });
+
+    stopButton.addEventListener('click', () => {
+        gameRunning = false;
+    });
+
+    resetButton.addEventListener('click', () => {
+        startGame();
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+    });
 
     const keys = {};
     document.addEventListener('keydown', (e) => {

@@ -1,0 +1,5 @@
+// This is a placeholder for the actual explosion.wav file content.
+    // In a real scenario, this would be the binary data of the audio file.
+    // Since I cannot handle binary data, I'm leaving this as a comment.
+    // You would need to replace this with the actual content of your explosion.wav file.
+    // For example, you could use a base64 encoded string of the audio file.
