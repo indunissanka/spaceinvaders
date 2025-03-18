@@ -199,7 +199,8 @@ const canvas = document.getElementById('gameCanvas');
 
     function drawWaveFire() {
         waveFire.forEach(fire => {
-            ctx.fillStyle = 'rgba(245, 245, 220, ' + fire.alpha + ')';
+            fire.flicker = Math.random();
+            ctx.fillStyle = 'rgba(245, 245, 220, ' + (fire.alpha * fire.flicker) + ')';
             ctx.beginPath();
             ctx.moveTo(fire.x, fire.y);
             ctx.quadraticCurveTo(fire.x + fire.width / 2, fire.y - fire.height * 2, fire.x + fire.width, fire.y);
@@ -441,7 +442,7 @@ const canvas = document.getElementById('gameCanvas');
             }, 2 * fireDelay);
         }
         
-        waveFire.push({x: playerX, y: playerY + playerHeight / 2, width: playerWidth, height: 10, alpha: 1});
+        waveFire.push({x: playerX, y: playerY + playerHeight / 2, width: playerWidth, height: 10, alpha: 1, flicker: 0.5});
         shootSound.currentTime = 0;
         shootSound.play();
     }
