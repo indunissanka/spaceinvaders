@@ -16,6 +16,8 @@ const canvas = document.getElementById('gameCanvas');
     let playerSpeed = 3;
     let playerX;
     let playerY;
+    let playerPulse = 0;
+    let playerPulseDirection = 0.01;
 
     let bulletWidth = 8;
     let bulletHeight = 24;
@@ -40,6 +42,8 @@ const canvas = document.getElementById('gameCanvas');
     const enemyBulletSpeed = 3;
     const enemyFireRate = 1000;
     let lastEnemyFireTime = 0;
+    let invaderPulse = 0;
+    let invaderPulseDirection = 0.01;
 
     let score = 0;
     let lives = 3;
@@ -97,7 +101,14 @@ const canvas = document.getElementById('gameCanvas');
     }
 
     function drawPlayer() {
-        ctx.fillStyle = '#808080';
+        playerPulse += playerPulseDirection;
+        if (playerPulse > 1 || playerPulse < 0) {
+            playerPulseDirection *= -1;
+        }
+
+        const pulseColor = `rgba(128, 128, 128, ${0.5 + playerPulse * 0.5})`;
+        ctx.fillStyle = pulseColor;
+
         for (let row = 0; row < playerSprite.length; row++) {
             for (let col = 0; col < playerSprite[row].length; col++) {
                 if (playerSprite[row][col] === 1) {
@@ -147,9 +158,15 @@ const canvas = document.getElementById('gameCanvas');
     }
 
     function drawInvaders() {
+        invaderPulse += invaderPulseDirection;
+        if (invaderPulse > 1 || invaderPulse < 0) {
+            invaderPulseDirection *= -1;
+        }
+
         invaders.forEach(invader => {
             if (invader.alive) {
-                ctx.fillStyle = invader.color;
+                const pulseColor = `rgba(${parseInt(invader.color.substring(1, 3), 16)}, ${parseInt(invader.color.substring(3, 5), 16)}, ${parseInt(invader.color.substring(5, 7), 16)}, ${0.5 + invaderPulse * 0.5})`;
+                ctx.fillStyle = pulseColor;
                 for (let row = 0; row < invaderSprite.length; row++) {
                     for (let col = 0; col < invaderSprite[row].length; col++) {
                         if (invaderSprite[row][col] === 1) {
