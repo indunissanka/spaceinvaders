@@ -6,6 +6,7 @@ const canvas = document.getElementById('gameCanvas');
     const gameOverText = document.getElementById('gameOver');
     const championText = document.getElementById('champion');
     const explosionSound = document.getElementById('explosionSound');
+    const shootSound = document.getElementById('shootSound');
     const startButton = document.getElementById('startButton');
     const stopButton = document.getElementById('stopButton');
     const resetButton = document.getElementById('resetButton');
@@ -334,6 +335,8 @@ const canvas = document.getElementById('gameCanvas');
               lives--;
               livesDisplay.textContent = lives;
               enemyBullets.splice(i, 1);
+              explosionSound.currentTime = 0;
+              explosionSound.play();
               resetGame();
               if (lives <= 0) {
                   gameRunning = false;
@@ -422,6 +425,8 @@ const canvas = document.getElementById('gameCanvas');
         }
         
         waveFire.push({x: playerX, y: playerY + playerHeight / 2, width: playerWidth, height: 10, alpha: 1});
+        shootSound.currentTime = 0;
+        shootSound.play();
     }
 
     function gameLoop() {
